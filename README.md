@@ -1,113 +1,194 @@
-# Install and configure git locally on your machine and perform basic git operations.
+# Instal and configure git on local system and perform basic git operations.
+
+---
 
 ## 1. Overview
 
-Git manages code through four stages:
+Git is a version control system. It keeps track of changes to your files over time and lets you save, undo, and share your work. When you use Git together with GitHub, your code moves through four stages:
 
 ```
 Working Directory --> Staging Area --> Local Repository --> GitHub Remote
    (git add)           (git commit)                          (git push)
 ```
 
-- **Working Directory:** The local folder where files are created and edited.
-- **Staging Area:** Holds changes selected for the next commit.
-- **Local Repository:** Git's local database of saved commits (the `.git` folder).
-- **GitHub Remote:** The online copy of the repository.
+- **Working Directory:** The normal folder on your computer where you create and edit files. This is just a regular folder until Git is told to track it.
+- **Staging Area:** A waiting area where you place the specific changes you want to save next. This lets you choose exactly what goes into each commit, instead of saving everything at once.
+- **Local Repository:** Git's private database, stored in a hidden `.git` folder. Every time you commit, a permanent snapshot of your staged changes is stored here on your own machine.
+- **GitHub Remote:** An online copy of your repository hosted on GitHub. Pushing sends your local commits there, so your code is backed up and can be shared with others.
+
+Understanding these four stages makes the rest of the commands easier to follow, since each command below simply moves your files from one stage to the next.
 
 ---
 
 ## 2. Installing Git on Windows
 
-1. Go to [git-scm.com](https://git-scm.com/) and download the 64-bit Git for Windows installer.
-2. Run the installer and use the following settings:
-   - Destination: default
-   - Components: enable Git Bash Here and Git GUI Here
-   - Default editor: Vim or Visual Studio Code
-   - Default branch name: `main`
-   - PATH option: Git from the command line and also from third-party software
-   - SSH: use bundled OpenSSH
-   - Line endings: checkout Windows-style, commit Unix-style (`core.autocrlf = true`)
-   - Terminal: MinTTY
-   - Credential helper: Git Credential Manager
-3. Click Install, then Finish.
+Windows does not come with Git installed, so it must be downloaded and set up manually.
+
+1. Open your browser and go to [git-scm.com](https://git-scm.com/). This is the official Git website, so it is safe to download from here.
+2. Click **Download for Windows**, then choose the 64-bit standalone installer. This matches almost all modern Windows computers.
+3. Once downloaded, run the installer file. During setup, you will be shown a series of option screens. Use the following choices:
+   - **Destination folder:** Leave this at the default location.
+   - **Components:** Enable "Git Bash Here" and "Git GUI Here." This adds convenient right-click options in File Explorer.
+   - **Default editor:** Choose Vim, or Visual Studio Code if you already use it. This is only used if Git ever opens a text editor for you, such as when writing a longer commit message.
+   - **Default branch name:** Set this to `main`. This decides what your first branch will be called in new repositories.
+   - **PATH option:** Choose "Git from the command line and also from third-party software." This allows Git to be used from any terminal, not just Git Bash.
+   - **SSH executable:** Choose "Use bundled OpenSSH." This is the version of SSH that comes packaged with Git and works without extra setup.
+   - **Line endings:** Choose "Checkout Windows-style, commit Unix-style." Windows and other operating systems handle the invisible end-of-line characters in text files differently; this setting prevents unnecessary file changes from being detected due to that difference.
+   - **Terminal emulator:** Choose MinTTY, which is the default terminal window used by Git Bash.
+   - **Credential helper:** Choose "Git Credential Manager." This safely stores your GitHub login so you are not asked to sign in every time.
+4. Click **Install** and wait for the process to finish, then click **Finish**.
 
 ### Verify installation
+
+Open Git Bash and run:
 
 ```bash
 git --version
 ```
 
+If Git installed correctly, this will print a version number, confirming that the `git` command is ready to use.
+
 ---
 
 ## 3. Initial Configuration
 
+Before making any commits, Git needs to know who you are, since every commit is labeled with an author name and email.
+
 ```bash
-git config --global user.name "sueaj-sp-nie"
-git config --global user.email "2025cs_suraj_sp_g@nie.ac.in"
+git config --global user.name "suraj-sp-nie"
+git config --global user.email "2025cs_surajsp_g@nie.ac.in"
 ```
 
-Check settings:
+- The `--global` flag means these settings apply to every Git repository on your computer, not just one project.
+- `user.name` and `user.email` should match the identity you plan to use, ideally the same email associated with your GitHub account.
+- `init.defaultBranch main` ensures every new repository starts with a branch named `main` instead of the older default name `master`.
+
+To confirm your settings were saved correctly, run:
 
 ```bash
 git config --list
 ```
 
+This displays all current Git configuration values, including the ones you just set.
+
 ---
 
 ## 4. Creating a Project Folder and File
 
+This step creates a sample project folder and a text file to practice with, entirely from the terminal.
+
 ```bash
 cd ~
-mkdir project-folder
-cd project-folder
+mkdir CDD-LAB-01
+cd CDD-LAB-01
+```
 
+- `cd ~` moves you to your home directory, a consistent starting point.
+- `mkdir project-folder` creates a new, empty folder named `CDD-LAB-01`.
+- `cd CDD-LAB-01` moves you inside that new folder so any following commands apply there.
+
+```bash
 echo "Header: My First Git Log" > notes.txt
-echo "Created on: 2026-08-18" >> notes.txt
+echo "Created on: 2026-08-31" >> notes.txt
 echo "Environment: Windows Git Bash" >> notes.txt
+```
 
+- `echo "text" > notes.txt` creates a new file called `notes.txt` and writes the given text into it. If the file already existed, this would erase its previous content and replace it.
+- `echo "text" >> notes.txt` adds a new line to the end of the file without deleting what is already there. The double arrow (`>>`) means "append," while the single arrow (`>`) means "overwrite."
+
+To check that the file was created correctly:
+
+```bash
 ls -la
 ```
+
+This lists all files in the current folder, including hidden ones, along with details such as size and permissions.
 
 ---
 
 ## 5. Local Git Workflow
 
+These commands turn the folder into a Git repository and save your first snapshot.
+
 ```bash
 git init
+```
+
+This creates a hidden `.git` folder inside `project-folder`, turning it into a Git repository. From this point on, Git can track changes to any file inside it.
+
+```bash
 git status
+```
+
+This shows the current state of your files. At this point, it will list `notes.txt` as an "untracked file," meaning Git sees it but is not yet saving its history.
+
+```bash
 git add notes.txt
+```
+
+This moves `notes.txt` into the staging area, marking it as ready to be included in the next commit.
+
+```bash
 git status
+```
+
+Running this again now shows `notes.txt` listed under "changes to be committed," confirming it is staged.
+
+```bash
 git commit -m "Initial commit: add notes.txt"
+```
+
+This saves a permanent snapshot of the staged file into the local repository. The text after `-m` is the commit message, a short description of what changed and why.
+
+```bash
 git log --oneline
 ```
+
+This displays the history of commits in a compact, one-line-per-commit format, letting you confirm your commit was saved.
 
 ---
 
 ## 6. Connecting to GitHub
 
-1. Log in to [GitHub.com](https://github.com).
-2. Create a new repository (do not initialize with README, .gitignore, or license).
-3. Copy the repository URL, for example:
-   `https://github.com/suraj-sp-nie/CDD-LAB-01.git`
+This step links your local repository to an online repository on GitHub so it can be backed up and shared.
 
-In Git Bash:
+1. Log in to [GitHub.com](https://github.com).
+2. Create a new repository. Leave the options to add a README, `.gitignore`, or license unchecked, since your project already has its own files and an existing history; adding these on GitHub could create conflicting files.
+3. After creating the repository, GitHub will show a URL similar to:
+   `https://github.com/suraj-sp-nie/CDD-LAB-01.git`
+   Copy this URL.
+
+In Git Bash, run:
 
 ```bash
 git remote add origin https://github.com/suraj-sp-nie/CDD-LAB-01.git
+```
+
+This tells your local repository where its online counterpart lives, giving it the nickname `origin`, which is the standard name used for the main remote.
+
+```bash
 git remote -v
 ```
+
+This lists the remote connections currently configured, letting you confirm the URL was added correctly.
 
 ---
 
 ## 7. Pushing to GitHub
 
+This step uploads your local commits to GitHub.
+
 ```bash
 git push -u origin main
 ```
 
-On first push, a Git Credential Manager window will appear. Choose "Sign in with your browser" and authorize access. Credentials are then saved for future pushes.
+- `push` sends your commits to the remote repository.
+- `origin main` specifies that you are pushing to the `main` branch of the `origin` remote.
+- The `-u` flag sets this as the default connection, so future pushes can simply use `git push` without repeating the full command.
 
-Refresh the GitHub repository page to confirm the files were uploaded.
+The first time you push, a Git Credential Manager window will appear. Choose "Sign in with your browser," then approve the request in the browser tab that opens. After this, your login is saved, so future pushes will not require signing in again.
+
+Once the push finishes, refresh your repository page on GitHub to confirm that your files now appear there.
 
 ---
 
