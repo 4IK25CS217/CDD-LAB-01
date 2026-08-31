@@ -1,9 +1,4 @@
-# Git Setup and GitHub Push Guide (Windows)
-
-**System:** Windows 10/11 with Git Bash
-**Goal:** Install Git, perform basic file operations, and push a project to GitHub using the terminal.
-
----
+# Install and configure git locally on your machine and perform basic git operations.
 
 ## 1. Overview
 
