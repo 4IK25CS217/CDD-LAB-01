@@ -55,7 +55,7 @@ If Git installed correctly, this will print a version number, confirming that th
 Before making any commits, Git needs to know who you are, since every commit is labeled with an author name and email.
 
 ```bash
-git config --global user.name "suraj-sp-nie"
+git config --global user.name "4IK25CS217"
 git config --global user.email "2025cs_surajsp_g@nie.ac.in"
 ```
 
@@ -161,7 +161,7 @@ This step links your local repository to an online repository on GitHub so it ca
 In Git Bash, run:
 
 ```bash
-git remote add origin https://github.com/suraj-sp-nie/CDD-LAB-01.git
+git remote add origin https://github.com/4IK25CS217/CDD-LAB-01.git
 ```
 
 This tells your local repository where its online counterpart lives, giving it the nickname `origin`, which is the standard name used for the main remote.
